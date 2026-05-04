@@ -1,14 +1,15 @@
-  build-docker:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
-    needs: check-code            # Wait for lint+test to pass first!
+FROM python:3.12-slim
 
-    steps:
-      - name: Get the code
-        uses: actions/checkout@v4
+WORKDIR /app
 
-      - name: Build Docker image
-        run: docker build -t my-app .
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-      - name: Verify image was created
-        run: docker images | grep my-app
+# Copy your app (main.py and templates)
+COPY . .
+
+EXPOSE 5027
+
+# Command to run the app
+CMD ["gunicorn", "--bind", "0.0.0.0:5027", "app.main:app"]
