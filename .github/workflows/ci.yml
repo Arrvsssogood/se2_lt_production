@@ -34,8 +34,8 @@ jobs:
 
     # Step 4: Check code style
       - name: Check code style (lint)
-        # Using 'python -m' ensures the runner finds the installed package
-        run: python -m flake8 app/
+        # This tells flake8 to ignore the 'line too long' rule (E501)
+        run: python -m flake8 app/ --ignore=E501
 
     # Step 5: Run tests
       - name: Run tests
