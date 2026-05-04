@@ -32,11 +32,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Check code style
+    # Step 4: Check code style
       - name: Check code style (lint)
-        run: flake8 app/
+        # Using 'python -m' ensures the runner finds the installed package
+        run: python -m flake8 app/
 
-# Step 5: Run tests
+    # Step 5: Run tests
       - name: Run tests
         # Using 'python -m pytest' ensures it uses the version you just installed
         run: python -m pytest tests/
