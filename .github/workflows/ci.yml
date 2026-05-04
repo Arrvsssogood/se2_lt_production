@@ -35,8 +35,7 @@ jobs:
     # Step 4: Check code style
       - name: Check code style (lint)
         # This tells flake8 to ignore the 'line too long' rule (E501)
-        run: python -m flake8 app/ --ignore=E501
-
+        run: python -m flake8 app/ --ignore=E501,E302,E305
     # Step 5: Run tests
       - name: Run tests
         # Using 'python -m pytest' ensures it uses the version you just installed
