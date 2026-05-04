@@ -68,8 +68,10 @@ jobs:
       # Build and push the image
       - name: Build and push
         run: |
-          docker build -t ghcr.io/${{ github.repository }}:latest .
-          docker push ghcr.io/${{ github.repository }}:latest
+          # This line converts your Repo Name to lowercase so GHCR accepts it
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker build -t ghcr.io/$REPO_LOWER:latest .
+          docker push ghcr.io/$REPO_LOWER:latest
   deploy:
     name: Deploy to Server
     runs-on: ubuntu-latest
@@ -84,11 +86,14 @@ jobs:
           username: ${{ secrets.SERVER_USER }}   # SSH username
           password: ${{ secrets.SERVER_PASSWORD }}     # SSH private key
           script: |
-            # Pull the latest image
-            docker pull ghcr.io/${{ github.repository }}:latest
-            # Stop the old container
-            docker stop my-app || true
-            docker rm my-app || true
-            # Start the new one
-            docker run -d --name my-app -p 80:5000 ghcr.io/${{ github.repository }}:latest
+            # Again, make sure we use the lowercase name to pull the image
+            REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            docker pull ghcr.io/$REPO_LOWER:latest
+            
+            # Clean up the old container if it exists
+            docker stop eat-inator || true
+            docker rm eat-inator || true
+            
+            # Start the new one on Port 5027
+            docker run -d --name eat-inator -p 80:5027 ghcr.io/$REPO_LOWER:latest
             echo "Deployed successfully!"
