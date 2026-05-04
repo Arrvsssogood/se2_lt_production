@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eat-inator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #87CEEB;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      border: 3px solid #222;
+      padding: 2rem 1.8rem;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 6px 6px 0px #222;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #e05c00;
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.4rem;
+      color: #222;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.6rem;
+      line-height: 1;
+    }
+
+    .result-box {
+      background: #fffbe6;
+      border: 2px solid #222;
+      border-radius: 10px;
+      padding: 1.4rem 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .result-label {
+      font-size: 0.72rem;
+      color: #888;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .food-name {
+      font-family: 'Bangers', cursive;
+      font-size: 2.2rem;
+      color: #e05c00;
+      letter-spacing: 0.04em;
+    }
+
+    .food-emoji {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      background: #e05c00;
+      color: white;
+      border: 2px solid #222;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 #222;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    button:hover { background: #c44f00; }
+    button:active { transform: translate(3px, 3px); box-shadow: none; }
+
+    .footer {
+      margin-top: 1.2rem;
+      font-size: 0.68rem;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="tag">Doofenshmirtz Evil Inc.</p>
+    <h1>The Eat-inator!</h1>
+
+    <div class="result-box">
+      <p class="result-label">You should eat...</p>
+      <span class="food-emoji" id="emoji">🍽️</span>
+      <p class="food-name" id="foodName">{{ food }}</p>
+    </div>
+
+    <button onclick="pickFood()">⚡ Pick Again</button>
+
+    <p class="footer">Dr. Doofenshmirtz–inspired random food suggestion—a simple Flask application for the final long test in Software Engineering 2</p>
+  </div>
+
+  <script>
+    const EMOJIS = {
+      "Fried Chicken":"🍗","Sinigang":"🍲","Pizza":"🍕","Pancit Inulas":"🍜",
+      "Adobo":"🥘","Burger":"🍔","Sushi":"🍣","Spaghetti na Matigsum":"🍝",
+      "Pares sa Atubangan kan School":"🥩","Tinola":"🫕", 
+      "Siomai-Rice":"🍚","Pancit":"🍜","Harvey's Lechon":"🐖"
+    };
+
+    const emojiEl = document.getElementById('emoji');
+    const nameEl  = document.getElementById('foodName');
+
+    emojiEl.textContent = EMOJIS[nameEl.textContent.trim()] || '🍽️';
+
+    async function pickFood() {
+      const res  = await fetch('/pick');
+      const data = await res.json();
+      nameEl.textContent  = data.food;
+      emojiEl.textContent = EMOJIS[data.food] || '🍽️';
+    }
+  </script>
+</body>
+</html>
