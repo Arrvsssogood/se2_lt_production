@@ -86,14 +86,12 @@ jobs:
           username: ${{ secrets.SERVER_USER }}   # SSH username
           password: ${{ secrets.SERVER_PASSWORD }}     # SSH private key
           script: |
-            # Again, make sure we use the lowercase name to pull the image
             REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
             docker pull ghcr.io/$REPO_LOWER:latest
             
-            # Clean up the old container if it exists
             docker stop eat-inator || true
             docker rm eat-inator || true
             
-            # Start the new one on Port 5027
-            docker run -d --name eat-inator -p 80:5027 ghcr.io/$REPO_LOWER:latest
+            # Map Port 80 (Public) to Port 5000 (New Internal)
+            docker run -d --name eat-inator -p 80:5000 ghcr.io/$REPO_LOWER:latest
             echo "Deployed successfully!"
